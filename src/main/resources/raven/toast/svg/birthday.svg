@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="32" height="32" viewBox="0 0 32 32" xml:space="preserve">
+<desc>Created with Fabric.js 3.6.6</desc>
+<defs>
+</defs>
+<g transform="matrix(0.39 0 0 0.39 15.87 15.88)"  >
+<circle style="stroke: rgb(0,0,0); stroke-opacity: 0.29; stroke-width: 0; stroke-dasharray: ; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(241,241,89); fill-opacity: 0.38; fill-rule: nonzero; opacity: 1;"  cx="0" cy="0" r="40" />
+</g>
+<g transform="matrix(0.56 0 0 0.56 16.16 15.01)"  >
+	<image style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"  xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJ8SURBVEhL5Za9axRBGMZ3RfEDBRFF/CAmKBbBb1ARG8/CKCRoEMVKid1VSgrb1GlFEPQPECIhgXQKXhCMIKKCIjZW6qlEQTB+hBw5f8/M7DF32Ry7452ND/x4Z959Z5+d3dnZjUI1ebfvAvS7bm7FLuYShqsIr2Aedh87N/FL+Txa4mJeDUIXbIcrSuRV7hkz207CS1htElH0HbqZ9XvbzaaQGWuGiam0Bq7aZnaFGO910VdarqlCjKdc9PXYxcwKMR6GB7ZpdL9aNbl/IxZZl1toQQp9jw8TTtleNM6KfuHamRX6Hh+BIcc+JfIq1PivteBWcxu3EopwCJYqlyLV7LDN6A18ss0FqsATuNm4wdQZY7qfcA/Wm0TrNA09mD+3Xc8YU912bYXdJtF66aOyB/OqOv4zPgjtMpV2gTyMfONNLrZTm13MvKr1BcqyLapmxjabyzfWRz1NOpE2ix7wt8pG6dgJOAk/lEhRzcM3fgqztlmTTqDV+Ag06zNQ0oEGyfQ0NTOqpa0L+KkDnn6DPIxqxgwos9kP0EwGlOE4+anSSN82Vv1FmVcq873k75gKK7WNKTWXoENjyBVA55A0gQF52G76BqL/qQ1QpnCuNNLbGcfxQ/pboEjuFlF1axXpf1Pk4opxHN2g+QGOkn9HjTYgLahp+nX/ZTVjBh5g4DqakxRVGLSC9lm4Dsonug3D1LylRuN3wjW4DIm+gP5URqmbdRdQ4I5+LZyfeKYCfwPR8xsDPefPoCtdbMuUkhmsdDFNc/ARNsJy6OdCxompr5MKOqCZqSTDZqbSMtC5dM46ZX2PW67/29h8Ndqs1J1LO44+6u3Sa5AHiqI/lfC1wdMD3LYAAAAASUVORK5CYII=" x="-15" y="-15" width="30" height="30"></image>
+</g>
+</svg>
