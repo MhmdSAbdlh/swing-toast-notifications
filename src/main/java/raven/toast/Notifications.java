@@ -1,19 +1,30 @@
 package raven.toast;
 
-import com.formdev.flatlaf.ui.FlatUIUtils;
-import com.formdev.flatlaf.util.Animator;
-import com.formdev.flatlaf.util.UIScale;
-import raven.toast.ui.ToastNotificationPanel;
-import raven.toast.util.UIUtils;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
+
+import com.formdev.flatlaf.ui.FlatUIUtils;
+import com.formdev.flatlaf.util.Animator;
+import com.formdev.flatlaf.util.UIScale;
+
+import raven.toast.ui.ToastNotificationPanel;
+import raven.toast.util.UIUtils;
 
 /**
  * <!-- FlatLaf Property -->
@@ -82,325 +93,338 @@ import java.util.function.Consumer;
  */
 public class Notifications {
 
-    private static Notifications instance;
-    private JFrame frame;
-    private final Map<Location, List<NotificationAnimation>> lists = new HashMap<>();
+	private static Notifications instance;
+	private JFrame frame;
+	private final Map<Location, List<NotificationAnimation>> lists = new HashMap<>();
 
-    private ComponentListener windowEvent;
+	private ComponentListener windowEvent;
 
-    private void installEvent(JFrame frame) {
-        if (windowEvent == null && frame != null) {
-            windowEvent = new ComponentAdapter() {
-                @Override
-                public void componentMoved(ComponentEvent e) {
-                    move(frame.getBounds());
-                }
+	private void installEvent(JFrame frame) {
+		if (windowEvent == null && frame != null) {
+			windowEvent = new ComponentAdapter() {
+				@Override
+				public void componentMoved(ComponentEvent e) {
+					move(frame.getBounds());
+				}
 
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    move(frame.getBounds());
-                }
-            };
-        }
-        if (this.frame != null) {
-            this.frame.removeComponentListener(windowEvent);
-        }
-        if (frame != null) {
-            frame.addComponentListener(windowEvent);
-        }
-        this.frame = frame;
-    }
+				@Override
+				public void componentResized(ComponentEvent e) {
+					move(frame.getBounds());
+				}
+			};
+		}
+		if (this.frame != null) {
+			this.frame.removeComponentListener(windowEvent);
+		}
+		if (frame != null) {
+			frame.addComponentListener(windowEvent);
+		}
+		this.frame = frame;
+	}
 
-    public static Notifications getInstance() {
-        if (instance == null) {
-            instance = new Notifications();
-        }
-        return instance;
-    }
+	public static Notifications getInstance() {
+		if (instance == null) {
+			instance = new Notifications();
+		}
+		return instance;
+	}
 
-    private synchronized void move(Rectangle rectangle) {
-        for (Map.Entry<Location, List<NotificationAnimation>> set : lists.entrySet()) {
-            for (int i = 0; i < set.getValue().size(); i++) {
-                NotificationAnimation an = set.getValue().get(i);
-                if (an != null) {
-                    an.move(rectangle);
-                }
-            }
-        }
-    }
+	private synchronized void move(Rectangle rectangle) {
+		for (Map.Entry<Location, List<NotificationAnimation>> set : lists.entrySet()) {
+			for (int i = 0; i < set.getValue().size(); i++) {
+				NotificationAnimation an = set.getValue().get(i);
+				if (an != null) {
+					an.move(rectangle);
+				}
+			}
+		}
+	}
 
-    public void setJFrame(JFrame frame) {
-        installEvent(frame);
-    }
+	public void setJFrame(JFrame frame) {
+		installEvent(frame);
+	}
 
-    public void show(Type type, String message) {
-        show(type, Location.TOP_CENTER, message);
-    }
+	public void show(Type type, String message) {
+		show(type, Location.TOP_CENTER, message);
+	}
 
-    public void show(Type type, long duration, String message) {
-        show(type, Location.TOP_CENTER, duration, message);
-    }
+	public void show(Type type, long duration, String message) {
+		show(type, Location.TOP_CENTER, duration, message);
+	}
 
-    public void show(Type type, Location location, String message) {
-        long duration = FlatUIUtils.getUIInt("Toast.duration", 2500);
-        show(type, location, duration, message);
-    }
+	public void show(Type type, Location location, String message) {
+		long duration = FlatUIUtils.getUIInt("Toast.duration", 2500);
+		show(type, location, duration, message);
+	}
 
-    public void show(Type type, Location location, long duration, String message) {
-        new NotificationAnimation(type, location, message).start(duration);
-    }
+	public void show(Type type, Location location, long duration, String message) {
+		new NotificationAnimation(type, location, message).start(duration);
+	}
 
-    public void show(JComponent component) {
-        show(Location.TOP_CENTER, component);
-    }
+	public void show(JComponent component) {
+		show(Location.TOP_CENTER, component);
+	}
 
-    public void show(Location location, JComponent component) {
-        long duration = FlatUIUtils.getUIInt("Toast.duration", 2500);
-        show(location, duration, component);
-    }
+	public void show(Location location, JComponent component) {
+		long duration = FlatUIUtils.getUIInt("Toast.duration", 2500);
+		show(location, duration, component);
+	}
 
-    public void show(Location location, long duration, JComponent component) {
-        new NotificationAnimation(location, component).start(duration);
-    }
+	public void show(Location location, long duration, JComponent component) {
+		new NotificationAnimation(location, component).start(duration);
+	}
 
-    public void clearAll() {
-        for (Map.Entry<Location, List<NotificationAnimation>> set : lists.entrySet()) {
-            for (int i = 0; i < set.getValue().size(); i++) {
-                NotificationAnimation an = set.getValue().get(i);
-                if (an != null) {
-                    an.close();
-                }
-            }
-        }
-    }
+	public void clearAll() {
+		for (Map.Entry<Location, List<NotificationAnimation>> set : lists.entrySet()) {
+			for (int i = 0; i < set.getValue().size(); i++) {
+				NotificationAnimation an = set.getValue().get(i);
+				if (an != null) {
+					an.close();
+				}
+			}
+		}
+	}
 
-    public void clear(Location location) {
-        List<NotificationAnimation> list = lists.get(location);
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                NotificationAnimation an = list.get(i);
-                if (an != null) {
-                    an.close();
-                }
-            }
-        }
-    }
+	public void clear(Location location) {
+		List<NotificationAnimation> list = lists.get(location);
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				NotificationAnimation an = list.get(i);
+				if (an != null) {
+					an.close();
+				}
+			}
+		}
+	}
 
-    protected ToastNotificationPanel createNotification(Type type, String message) {
-        ToastNotificationPanel toastNotificationPanel = new ToastNotificationPanel();
-        toastNotificationPanel.set(type, message);
-        return toastNotificationPanel;
-    }
+	protected ToastNotificationPanel createNotification(Type type, String message) {
+		ToastNotificationPanel toastNotificationPanel = new ToastNotificationPanel();
+		toastNotificationPanel.set(type, message);
+		return toastNotificationPanel;
+	}
 
-    private synchronized void updateList(Location key, NotificationAnimation values, boolean add) {
-        if (add) {
-            if (lists.containsKey(key)) {
-                lists.get(key).add(values);
-            } else {
-                List<NotificationAnimation> list = new ArrayList<>();
-                list.add(values);
-                lists.put(key, list);
-            }
-        } else {
-            if (lists.containsKey(key)) {
-                lists.get(key).remove(values);
-                if (lists.get(key).isEmpty()) {
-                    lists.remove(key);
-                }
-            }
-        }
-    }
+	private synchronized void updateList(Location key, NotificationAnimation values, boolean add) {
+		if (add) {
+			if (lists.containsKey(key)) {
+				lists.get(key).add(values);
+			} else {
+				List<NotificationAnimation> list = new ArrayList<>();
+				list.add(values);
+				lists.put(key, list);
+			}
+		} else {
+			if (lists.containsKey(key)) {
+				lists.get(key).remove(values);
+				if (lists.get(key).isEmpty()) {
+					lists.remove(key);
+				}
+			}
+		}
+	}
 
-    public enum Type {
-        SUCCESS, INFO, WARNING, ERROR
-    }
+	public enum Type {
+		SUCCESS, INFO, WARNING, ERROR, BIRTHDAY
+	}
 
-    public enum Location {
-        TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
-    }
+	public enum Location {
+		TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, CENTER, CENTER_RIGHT, CENTER_LEFT
+	}
 
-    private class NotificationAnimation {
+	private class NotificationAnimation {
 
-        private JWindow window;
-        private Animator animator;
-        private boolean show = true;
-        private float animate;
-        private int x;
-        private int y;
-        private Location location;
-        private Insets frameInsets;
-        private int horizontalSpace;
-        private int animationMove;
-        private boolean top;
-        private boolean close = false;
+		private JWindow window;
+		private Animator animator;
+		private boolean show = true;
+		private float animate;
+		private int x;
+		private int y;
+		private Location location;
+		private Insets frameInsets;
+		private int horizontalSpace;
+		private int animationMove;
+		private boolean top;
+		private boolean close = false;
 
-        public NotificationAnimation(Type type, Location location, String message) {
-            installDefault();
-            this.location = location;
-            window = new JWindow(frame);
-            ToastNotificationPanel toastNotificationPanel = createNotification(type, message);
-            toastNotificationPanel.putClientProperty(ToastClientProperties.TOAST_CLOSE_CALLBACK, (Consumer) o -> close());
-            window.setContentPane(toastNotificationPanel);
-            window.setFocusableWindowState(false);
-            toastNotificationPanel.setDialog(window);
-        }
+		public NotificationAnimation(Type type, Location location, String message) {
+			installDefault();
+			this.location = location;
+			window = new JWindow(frame);
+			ToastNotificationPanel toastNotificationPanel = createNotification(type, message);
+			toastNotificationPanel.putClientProperty(ToastClientProperties.TOAST_CLOSE_CALLBACK,
+					(Consumer) o -> close());
+			window.setContentPane(toastNotificationPanel);
+			window.setFocusableWindowState(false);
+			toastNotificationPanel.setDialog(window);
+		}
 
-        public NotificationAnimation(Location location, JComponent component) {
-            installDefault();
-            this.location = location;
-            window = new JWindow(frame);
-            window.setBackground(new Color(0, 0, 0, 0));
-            window.setContentPane(component);
-            window.setFocusableWindowState(false);
-            window.setSize(component.getPreferredSize());
-        }
+		public NotificationAnimation(Location location, JComponent component) {
+			installDefault();
+			this.location = location;
+			window = new JWindow(frame);
+			window.setBackground(new Color(0, 0, 0, 0));
+			window.setContentPane(component);
+			window.setFocusableWindowState(false);
+			window.setSize(component.getPreferredSize());
+		}
 
-        private void installDefault() {
-            frameInsets = UIUtils.getInsets("Toast.frameInsets", new Insets(10, 10, 10, 10));
-            horizontalSpace = FlatUIUtils.getUIInt("Toast.horizontalGap", 10);
-            animationMove = FlatUIUtils.getUIInt("Toast.animationMove", 10);
-        }
+		private void installDefault() {
+			frameInsets = UIUtils.getInsets("Toast.frameInsets", new Insets(10, 10, 10, 10));
+			horizontalSpace = FlatUIUtils.getUIInt("Toast.horizontalGap", 10);
+			animationMove = FlatUIUtils.getUIInt("Toast.animationMove", 10);
+		}
 
-        public void start(long duration) {
-            int animation = FlatUIUtils.getUIInt("Toast.animation", 200);
-            int resolution = FlatUIUtils.getUIInt("Toast.animationResolution", 5);
-            animator = new Animator(animation, new Animator.TimingTarget() {
-                @Override
-                public void begin() {
-                    if (show) {
-                        updateList(location, NotificationAnimation.this, true);
-                        installLocation();
-                    }
-                }
+		public void start(long duration) {
+			int animation = FlatUIUtils.getUIInt("Toast.animation", 200);
+			int resolution = FlatUIUtils.getUIInt("Toast.animationResolution", 5);
+			animator = new Animator(animation, new Animator.TimingTarget() {
+				@Override
+				public void begin() {
+					if (show) {
+						updateList(location, NotificationAnimation.this, true);
+						installLocation();
+					}
+				}
 
-                @Override
-                public void timingEvent(float f) {
-                    animate = show ? f : 1f - f;
-                    updateLocation(true);
-                }
+				@Override
+				public void timingEvent(float f) {
+					animate = show ? f : 1f - f;
+					updateLocation(true);
+				}
 
-                @Override
-                public void end() {
-                    if (show && close == false) {
-                        SwingUtilities.invokeLater(() -> {
-                            new Thread(() -> {
-                                sleep(duration);
-                                if (close == false) {
-                                    show = false;
-                                    animator.start();
-                                }
-                            }).start();
-                        });
-                    } else {
-                        updateList(location, NotificationAnimation.this, false);
-                        window.dispose();
-                    }
-                }
-            });
-            animator.setResolution(resolution);
-            animator.start();
-        }
+				@Override
+				public void end() {
+					if (show && close == false) {
+						SwingUtilities.invokeLater(() -> {
+							new Thread(() -> {
+								sleep(duration);
+								if (close == false) {
+									show = false;
+									animator.start();
+								}
+							}).start();
+						});
+					} else {
+						updateList(location, NotificationAnimation.this, false);
+						window.dispose();
+					}
+				}
+			});
+			animator.setResolution(resolution);
+			animator.start();
+		}
 
-        private void installLocation() {
-            Insets insets;
-            Rectangle rec;
-            if (frame == null) {
-                insets = UIScale.scale(frameInsets);
-                rec = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
-            } else {
-                insets = UIScale.scale(FlatUIUtils.addInsets(frameInsets, frame.getInsets()));
-                rec = frame.getBounds();
-            }
-            setupLocation(rec, insets);
-            window.setOpacity(0f);
-            window.setVisible(true);
-        }
+		private void installLocation() {
+			Insets insets;
+			Rectangle rec;
+			if (frame == null) {
+				insets = UIScale.scale(frameInsets);
+				rec = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
+			} else {
+				insets = UIScale.scale(FlatUIUtils.addInsets(frameInsets, frame.getInsets()));
+				rec = frame.getBounds();
+			}
+			setupLocation(rec, insets);
+			window.setOpacity(0f);
+			window.setVisible(true);
+		}
 
-        private void move(Rectangle rec) {
-            Insets insets = UIScale.scale(FlatUIUtils.addInsets(frameInsets, frame.getInsets()));
-            setupLocation(rec, insets);
-        }
+		private void move(Rectangle rec) {
+			Insets insets = UIScale.scale(FlatUIUtils.addInsets(frameInsets, frame.getInsets()));
+			setupLocation(rec, insets);
+		}
 
-        private void setupLocation(Rectangle rec, Insets insets) {
-            if (location == Location.TOP_LEFT) {
-                x = rec.x + insets.left;
-                y = rec.y + insets.top;
-                top = true;
-            } else if (location == Location.TOP_CENTER) {
-                x = rec.x + (rec.width - window.getWidth()) / 2;
-                y = rec.y + insets.top;
-                top = true;
-            } else if (location == Location.TOP_RIGHT) {
-                x = rec.x + rec.width - (window.getWidth() + insets.right);
-                y = rec.y + insets.top;
-                top = true;
-            } else if (location == Location.BOTTOM_LEFT) {
-                x = rec.x + insets.left;
-                y = rec.y + rec.height - (window.getHeight() + insets.bottom);
-                top = false;
-            } else if (location == Location.BOTTOM_CENTER) {
-                x = rec.x + (rec.width - window.getWidth()) / 2;
-                y = rec.y + rec.height - (window.getHeight() + insets.bottom);
-                top = false;
-            } else if (location == Location.BOTTOM_RIGHT) {
-                x = rec.x + rec.width - (window.getWidth() + insets.right);
-                y = rec.y + rec.height - (window.getHeight() + insets.bottom);
-                top = false;
-            }
-            int am = UIScale.scale(top ? animationMove : -animationMove);
-            int ly = (int) (getLocation(NotificationAnimation.this) + y + animate * am);
-            window.setLocation(x, ly);
-        }
+		private void setupLocation(Rectangle rec, Insets insets) {
+			if (location == Location.TOP_LEFT) {
+				x = rec.x + insets.left;
+				y = rec.y + insets.top;
+				top = true;
+			} else if (location == Location.TOP_CENTER) {
+				x = rec.x + (rec.width - window.getWidth()) / 2;
+				y = rec.y + insets.top;
+				top = true;
+			} else if (location == Location.TOP_RIGHT) {
+				x = rec.x + rec.width - (window.getWidth() + insets.right);
+				y = rec.y + insets.top;
+				top = true;
+			} else if (location == Location.BOTTOM_LEFT) {
+				x = rec.x + insets.left;
+				y = rec.y + rec.height - (window.getHeight() + insets.bottom);
+				top = false;
+			} else if (location == Location.BOTTOM_CENTER) {
+				x = rec.x + (rec.width - window.getWidth()) / 2;
+				y = rec.y + rec.height - (window.getHeight() + insets.bottom);
+				top = false;
+			} else if (location == Location.BOTTOM_RIGHT) {
+				x = rec.x + rec.width - (window.getWidth() + insets.right);
+				y = rec.y + rec.height - (window.getHeight() + insets.bottom);
+				top = false;
+			} else if (location == Location.CENTER) {
+				x = rec.x + (rec.width - window.getWidth()) / 2;
+				y = rec.y + (rec.height - window.getHeight()) / 2;
+				top = false;
+			} else if (location == Location.CENTER_RIGHT) {
+				x = rec.x + rec.width - (window.getWidth() + insets.right);
+				y = rec.y + (rec.height - window.getHeight()) / 2;
+				top = false;
+			} else if (location == Location.CENTER_LEFT) {
+				x = rec.x + insets.left;
+				y = rec.y + (rec.height - window.getHeight()) / 2;
+				top = false;
+			}
+			int am = UIScale.scale(top ? animationMove : -animationMove);
+			int ly = (int) (getLocation(NotificationAnimation.this) + y + animate * am);
+			window.setLocation(x, ly);
+		}
 
-        private void updateLocation(boolean loop) {
-            int am = UIScale.scale(top ? animationMove : -animationMove);
-            int ly = (int) (getLocation(NotificationAnimation.this) + y + animate * am);
-            window.setLocation(x, ly);
-            window.setOpacity(animate);
-            if (loop) {
-                update(this);
-            }
-        }
+		private void updateLocation(boolean loop) {
+			int am = UIScale.scale(top ? animationMove : -animationMove);
+			int ly = (int) (getLocation(NotificationAnimation.this) + y + animate * am);
+			window.setLocation(x, ly);
+			window.setOpacity(animate);
+			if (loop) {
+				update(this);
+			}
+		}
 
-        private int getLocation(NotificationAnimation notification) {
-            int height = 0;
-            List<NotificationAnimation> list = lists.get(location);
-            for (int i = 0; i < list.size(); i++) {
-                NotificationAnimation n = list.get(i);
-                if (notification == n) {
-                    return height;
-                }
-                double v = n.animate * (list.get(i).window.getHeight() + UIScale.scale(horizontalSpace));
-                height += top ? v : -v;
-            }
-            return height;
-        }
+		private int getLocation(NotificationAnimation notification) {
+			int height = 0;
+			List<NotificationAnimation> list = lists.get(location);
+			for (int i = 0; i < list.size(); i++) {
+				NotificationAnimation n = list.get(i);
+				if (notification == n) {
+					return height;
+				}
+				double v = n.animate * (list.get(i).window.getHeight() + UIScale.scale(horizontalSpace));
+				height += top ? v : -v;
+			}
+			return height;
+		}
 
-        private void update(NotificationAnimation except) {
-            List<NotificationAnimation> list = lists.get(location);
-            for (int i = 0; i < list.size(); i++) {
-                NotificationAnimation n = list.get(i);
-                if (n != except) {
-                    n.updateLocation(false);
-                }
-            }
-        }
+		private void update(NotificationAnimation except) {
+			List<NotificationAnimation> list = lists.get(location);
+			for (int i = 0; i < list.size(); i++) {
+				NotificationAnimation n = list.get(i);
+				if (n != except) {
+					n.updateLocation(false);
+				}
+			}
+		}
 
-        public void close() {
-            close = true;
-            show = false;
-            if (animator.isRunning()) {
-                animator.stop();
-            }
-            animator.start();
-        }
+		public void close() {
+			close = true;
+			show = false;
+			if (animator.isRunning()) {
+				animator.stop();
+			}
+			animator.start();
+		}
 
-        private void sleep(long l) {
-            try {
-                Thread.sleep(l);
-            } catch (InterruptedException e) {
-                System.err.println(e);
-            }
-        }
-    }
+		private void sleep(long l) {
+			try {
+				Thread.sleep(l);
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+	}
 }
