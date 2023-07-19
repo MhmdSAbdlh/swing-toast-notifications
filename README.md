@@ -42,13 +42,13 @@ FlatIntelliJLaf.setup();
 //  Notifications Type
 
 public enum Type {
-  SUCCESS, INFO, WARNING, ERROR
+  SUCCESS, INFO, WARNING, ERROR, BIRTHDAY
 }
 
 //  Notification Location
 
 public enum Location {
-  TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+  TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, CENTER
 }
 
 ```
@@ -124,6 +124,7 @@ UIManager.put(ToastClientProperties.TOAST_INFO_ICON, new FlatSVGIcon("raven/toas
 | Toast.warning.icon |  | Icon |
 | Toast.error.icon  |  | Icon |
 | Toast.closeIcon   |  | Icon |
+| Toast.birthday.icon   |  | Icon |
 
 Visit flatlaf for more
 
