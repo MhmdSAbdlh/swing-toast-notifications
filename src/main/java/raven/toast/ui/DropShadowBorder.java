@@ -1,22 +1,33 @@
 package raven.toast.ui;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Shape;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+import javax.swing.border.EmptyBorder;
+
 import com.formdev.flatlaf.FlatPropertiesLaf;
 import com.formdev.flatlaf.ui.FlatStylingSupport.Styleable;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
-import raven.toast.util.ShadowRenderer;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import raven.toast.util.ShadowRenderer;
 
 /**
  * @author Raven
  */
 public class DropShadowBorder extends EmptyBorder {
 
-    @Styleable
+    private static final long serialVersionUID = 1L;
+	@Styleable
     protected Color shadowColor;
     @Styleable
     protected Insets shadowInsets;
